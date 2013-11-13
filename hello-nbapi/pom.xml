@@ -1,0 +1,72 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<properties>
+		<jackson.version>1.9.8</jackson.version>
+		<enunciate.version>1.26.2</enunciate.version>
+	</properties>
+	<parent>
+        <artifactId>hello-service</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <groupId>com.company.opendaylight.controller</groupId>
+    </parent>
+	<artifactId>hello-nbapi</artifactId>
+	<packaging>bundle</packaging>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<configuration>
+					<instructions>
+						<Import-Package>
+							org.apache.commons.logging,
+							com.sun.jersey.spi.container.servlet,
+							javax.ws.rs,
+							javax.ws.rs.core,
+							javax.xml.bind.annotation,
+							javax.xml.bind,
+							org.slf4j,
+							org.apache.catalina.filters,
+							org.codehaus.jackson.jaxrs,
+							!org.codehaus.enunciate.jaxrs
+						</Import-Package>
+						<Web-ContextPath>/controller/nb/v1/hello</Web-ContextPath>
+						<Jaxrs-Resources>,${classes;ANNOTATION;javax.ws.rs.Path}</Jaxrs-Resources>
+					</instructions>
+					<manifestLocation>${project.build.outputDirectory}/META-INF</manifestLocation>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-jaxrs</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-xc</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.opendaylight.controller</groupId>
+			<artifactId>commons.northbound</artifactId>
+			<version>0.4.1-SNAPSHOT</version>
+		</dependency>
+</dependencies>
+</project>
