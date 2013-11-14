@@ -16,6 +16,13 @@
                 <artifactId>maven-bundle-plugin</artifactId>
                 <configuration>
                     <instructions>
+                        <Import-Package>
+                            org.opendaylight.yangtools.yang.common,
+                            org.opendaylight.controller.sal.common.util,
+                            org.opendaylight.controller.sal.binding.api,
+                            org/opendaylight.yangtools.yang.binding,
+                            org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113
+                        </Import-Package>
                         <Bundle-Activator>com.company.opendaylight.controller.hello.HelloProvider</Bundle-Activator>
                     </instructions>
                     <manifestLocation>${project.build.outputDirectory}/META-INF</manifestLocation>

@@ -29,58 +29,33 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.company.opendaylight.controller.hello;
+package com.company.opendaylight.controller.hello.nbapi;
 
-import org.opendaylight.controller.sal.binding.api.AbstractBindingAwareProvider;
-import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.ProviderContext;
-import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.RpcRegistration;
-import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.HelloService;
-import org.osgi.framework.BundleContext;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.ws.rs.core.Application;
 
 /**
  * @author David Bainbridge <davidk.bainbridge@gmail.com>
  * 
  */
-public class HelloProvider extends AbstractBindingAwareProvider {
-    private ProviderContext providerContext = null;
-    private HelloService service = null;
-    private RpcRegistration<HelloService> registration = null;
-
-    public HelloProvider() {
-        service = new HelloServiceImpl();
-    }
+public class HelloApplication extends Application {
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see org.opendaylight.controller.sal.binding.api.BindingAwareProvider#
-     * onSessionInitiated
-     * (org.opendaylight.controller.sal.binding.api.BindingAwareBroker
-     * .ProviderContext)
+     * Because an OSGi bundle is not automatically searched for JAXRC 
+     * annotations that identify web services, the getClasses method needs
+     * to be implemented to manually define the classes with JAXRC annotations. 
      */
     @Override
-    public void onSessionInitiated(ProviderContext providerContext) {
-        this.providerContext = providerContext;
-        registration = providerContext.addRpcImplementation(HelloService.class, service);
-        System.err.println("REGISTRATION " + this + " " + registration);
+    public Set<Class<?>> getClasses() {
+        Set<Class<?>> classes = new HashSet<Class<?>>(1);
+        classes.add(Northbound.class);
+        return classes;
     }
 
     @Override
-    protected void stopImpl(BundleContext context) {
-        try {
-            System.err.println("Closing registration");
-            registration.close();
-            System.err.println("Close complete");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public final ProviderContext getProviderContext() {
-        return providerContext;
-    }
-
-    public final HelloService getService() {
-        return service;
+    public Set<Object> getSingletons() {
+        return new HashSet<Object>();
     }
 }

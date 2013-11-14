@@ -31,12 +31,17 @@
  */
 package com.company.opendaylight.controller.hello;
 
+import java.util.ArrayList;
 import java.util.concurrent.Future;
 
 import org.opendaylight.controller.sal.binding.api.NotificationProviderService;
+import org.opendaylight.controller.sal.common.util.Futures;
+import org.opendaylight.controller.sal.common.util.Rpcs;
 import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.HelloService;
 import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.SayHelloInput;
 import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.SayHelloOutput;
+import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.SayHelloOutputBuilder;
+import org.opendaylight.yangtools.yang.common.RpcError;
 import org.opendaylight.yangtools.yang.common.RpcResult;
 
 /**
@@ -57,9 +62,12 @@ public class HelloServiceImpl implements HelloService {
      * .opendaylight.company.com.ns.model.hello.rev131113.SayHelloInput)
      */
     @Override
-    public Future<RpcResult<SayHelloOutput>> sayHello(SayHelloInput arg0) {
-        // TODO Auto-generated method stub
-        return null;
+    public Future<RpcResult<SayHelloOutput>> sayHello(SayHelloInput input) {
+        System.err.println("IN IMPLEMENTATION");
+        SayHelloOutput result = new SayHelloOutputBuilder().setNodeResponse(
+                "Hello, World?").build();
+        return Futures.immediateFuture(Rpcs.getRpcResult(true, result,
+                new ArrayList<RpcError>()));
     }
 
     public void setNotificationProvider(
