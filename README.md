@@ -12,6 +12,7 @@ The sample service is made up of four parts:
 - __Model__ - the model defines the data types and service RPCs in an implementation
     neutral notation using the [yang modeling language](https://tools.ietf.org/html/rfc6020)
 - __Provider__ - this is an implementation of the service based on the interfaces generated from the model.
+- __Consumer__ - this is really a test bundle that can respond to notifications sent out from the HelloProvider.
 - __NB API__ - this is a RESTful interface into the capabilities of the service,
     *note: there need not be a one-to-one correlation between the service interface and the NB API*   
 - __CLI__ - this exposes the service capability to the CLI. This is current TDB and I have not looked into how this is actually done. 
@@ -84,9 +85,32 @@ sample service: (note: some output has been omitted)
         osgi> start 230
         
         
-        osgi> install file:///home/joe/src/odl-sample-service/hello-nbapi/target/hello-nbapi-0.0.1-SNAPSHOT.jar
+        osgi> install file:///home/joe/src/odl-sample-service/hello-consumer/target/hello-consumer-0.0.1-SNAPSHOT.jar
         
         Key                  231
+        ProtectionDomain     null
+        Location             file:///home/joe/src/odl-sample-service/hello-consumer/target/hello-consumer-0.0.1-SNAPSHOT.jar
+        State                32
+        Bundle               231|Active     |    1|com.company.opendaylight.controller.hello-consumer (0.0.1.SNAPSHOT)
+        Version              0.0.1.SNAPSHOT
+        StateChanging        null
+        BundleContext        org.eclipse.osgi.framework.internal.core.BundleContextImpl@43abb4ec
+        BundleId             232
+        StartLevel           1
+        SymbolicName         com.company.opendaylight.controller.hello-consumer
+        BundleData           com.company.opendaylight.controller.hello-consumer_0.0.1.SNAPSHOT
+        KeyHashCode          231
+        BundleDescription    com.company.opendaylight.controller.hello-consumer_0.0.1.SNAPSHOT
+        Framework            org.eclipse.osgi.framework.internal.core.Framework@6d5e2115
+        ResolutionFailureException org.osgi.framework.BundleException: The state indicates the bundle is resolved
+        Revisions            [com.company.opendaylight.controller.hello-consumer_0.0.1.SNAPSHOT]
+        
+        osgi> start 231
+                
+        
+        osgi> install file:///home/joe/src/odl-sample-service/hello-nbapi/target/hello-nbapi-0.0.1-SNAPSHOT.jar
+        
+        Key                  232
         ProtectionDomain     null
         Location             file:///home/joe/src/odl-sample-service/hello-nbapi/target/hello-nbapi-0.0.1-SNAPSHOT.jar
         State                32
@@ -94,17 +118,17 @@ sample service: (note: some output has been omitted)
         Version              0.0.1.SNAPSHOT
         StateChanging        null
         BundleContext        org.eclipse.osgi.framework.internal.core.BundleContextImpl@43abb4ec
-        BundleId             231
+        BundleId             232
         StartLevel           1
         SymbolicName         com.company.opendaylight.controller.hello-nbapi
         BundleData           com.company.opendaylight.controller.hello-nbapi_0.0.1.SNAPSHOT
-        KeyHashCode          231
+        KeyHashCode          232
         BundleDescription    com.company.opendaylight.controller.hello-nbapi_0.0.1.SNAPSHOT
         Framework            org.eclipse.osgi.framework.internal.core.Framework@6d5e2115
         ResolutionFailureException org.osgi.framework.BundleException: The state indicates the bundle is resolved
         Revisions            [com.company.opendaylight.controller.hello-nbapi_0.0.1.SNAPSHOT]
         
-        osgi> start 231
+        osgi> start 232
         
 Testing Service
 ====
