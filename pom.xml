@@ -11,6 +11,7 @@
         <module>hello-service</module>
         <module>hello-model</module>
         <module>hello-provider</module>
+        <module>hello-consumer</module>
         <module>hello-nbapi</module>
     </modules>
 </project>

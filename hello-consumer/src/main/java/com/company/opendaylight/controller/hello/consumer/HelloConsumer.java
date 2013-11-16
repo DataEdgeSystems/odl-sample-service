@@ -29,60 +29,48 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.company.opendaylight.controller.hello;
+package com.company.opendaylight.controller.hello.consumer;
 
-import org.opendaylight.controller.sal.binding.api.NotificationProviderService;
-import org.opendaylight.controller.sal.binding.api.AbstractBindingAwareProvider;
-import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.ProviderContext;
-import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.RpcRegistration;
-import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.HelloService;
+import org.opendaylight.controller.sal.binding.api.AbstractBindingAwareConsumer;
+import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.ConsumerContext;
+import org.opendaylight.controller.sal.binding.api.NotificationService;
+import org.opendaylight.yangtools.concepts.Registration;
+import org.opendaylight.yangtools.yang.binding.NotificationListener;
 import org.osgi.framework.BundleContext;
 
 /**
  * @author David Bainbridge <davidk.bainbridge@gmail.com>
  * 
  */
-public class HelloProvider extends AbstractBindingAwareProvider {
-    private ProviderContext providerContext = null;
-    private HelloServiceImpl service = null;
-    private RpcRegistration<HelloService> registration = null;
+public class HelloConsumer extends AbstractBindingAwareConsumer {
 
-    public HelloProvider() {
-        service = new HelloServiceImpl();
-    }
+    private Registration<NotificationListener> registration = null;
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.opendaylight.controller.sal.binding.api.BindingAwareProvider#
-     * onSessionInitiated
+     * @see org.opendaylight.controller.sal.binding.api.BindingAwareConsumer#
+     * onSessionInitialized
      * (org.opendaylight.controller.sal.binding.api.BindingAwareBroker
-     * .ProviderContext)
+     * .ConsumerContext)
      */
     @Override
-    public void onSessionInitiated(ProviderContext providerContext) {
-        this.providerContext = providerContext;
-        service.setNotificationProvider(this.providerContext.getSALService(NotificationProviderService.class));
-        registration = providerContext.addRpcImplementation(HelloService.class, service);
-        System.err.println("REGISTRATION " + this + " " + registration);
+    public void onSessionInitialized(ConsumerContext session) {
+        NotificationService notificationService = session
+                .getSALService(NotificationService.class);
+        registration = notificationService
+                .registerNotificationListener(new HelloListenerImpl());
     }
 
     @Override
     protected void stopImpl(BundleContext context) {
         try {
-            System.err.println("Closing registration");
             registration.close();
-            System.err.println("Close complete");
         } catch (Exception e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        super.stopImpl(context);
     }
 
-    public final ProviderContext getProviderContext() {
-        return providerContext;
-    }
-
-    public final HelloService getService() {
-        return service;
-    }
 }

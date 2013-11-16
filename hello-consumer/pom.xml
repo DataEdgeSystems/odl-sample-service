@@ -1,0 +1,51 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>hello-service</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <groupId>com.company.opendaylight.controller</groupId>
+    </parent>
+    <artifactId>hello-consumer</artifactId>
+    <packaging>bundle</packaging>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Import-Package>
+                            org.opendaylight.yangtools.yang.common,
+                            org.opendaylight.controller.sal.common.util,
+                            org.opendaylight.controller.sal.binding.api,
+                            org/opendaylight.yangtools.yang.binding,
+                            org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113
+                        </Import-Package>
+                        <Bundle-Activator>com.company.opendaylight.controller.hello.consumer.HelloConsumer</Bundle-Activator>
+                    </instructions>
+                    <manifestLocation>${project.build.outputDirectory}/META-INF</manifestLocation>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>hello-model</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.opendaylight.controller</groupId>
+            <artifactId>sal-binding-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.opendaylight.controller</groupId>
+            <artifactId>sal-common-util</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+</project>

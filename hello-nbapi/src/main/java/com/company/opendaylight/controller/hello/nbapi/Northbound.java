@@ -62,6 +62,7 @@ public class Northbound {
             @PathParam("nodeId") String nodeId) {
         HelloService service = (HelloService) ServiceHelper.getGlobalInstance(
                 HelloService.class, this);
+        
         System.err.println("SERVICE: " + service);
         System.err.println("CONTAINER: " + containerName);
         System.err.println("NODEID: " + nodeId);

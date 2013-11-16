@@ -37,6 +37,8 @@ import java.util.concurrent.Future;
 import org.opendaylight.controller.sal.binding.api.NotificationProviderService;
 import org.opendaylight.controller.sal.common.util.Futures;
 import org.opendaylight.controller.sal.common.util.Rpcs;
+import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.HelloDone;
+import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.HelloDoneBuilder;
 import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.HelloService;
 import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.SayHelloInput;
 import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.SayHelloOutput;
@@ -66,6 +68,12 @@ public class HelloServiceImpl implements HelloService {
         System.err.println("IN IMPLEMENTATION");
         SayHelloOutput result = new SayHelloOutputBuilder().setNodeResponse(
                 "Hello, World?").build();
+
+        if (notificationProvider != null) {
+            HelloDone hd = new HelloDoneBuilder().setStatus(
+                    HelloDone.Status.Success).build();
+            notificationProvider.publish(hd);
+        }
         return Futures.immediateFuture(Rpcs.getRpcResult(true, result,
                 new ArrayList<RpcError>()));
     }
