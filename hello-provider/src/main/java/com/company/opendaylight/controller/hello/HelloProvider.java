@@ -31,18 +31,23 @@
  */
 package com.company.opendaylight.controller.hello;
 
-import org.opendaylight.controller.sal.binding.api.NotificationProviderService;
 import org.opendaylight.controller.sal.binding.api.AbstractBindingAwareProvider;
 import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.ProviderContext;
 import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.RpcRegistration;
+import org.opendaylight.controller.sal.binding.api.NotificationProviderService;
 import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.HelloService;
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author David Bainbridge <davidk.bainbridge@gmail.com>
  * 
  */
 public class HelloProvider extends AbstractBindingAwareProvider {
+    private static final Logger log = LoggerFactory
+            .getLogger(HelloProvider.class);
+
     private ProviderContext providerContext = null;
     private HelloServiceImpl service = null;
     private RpcRegistration<HelloService> registration = null;
@@ -61,20 +66,36 @@ public class HelloProvider extends AbstractBindingAwareProvider {
      */
     @Override
     public void onSessionInitiated(ProviderContext providerContext) {
-        this.providerContext = providerContext;
-        service.setNotificationProvider(this.providerContext.getSALService(NotificationProviderService.class));
-        registration = providerContext.addRpcImplementation(HelloService.class, service);
-        System.err.println("REGISTRATION " + this + " " + registration);
+        try {
+            this.providerContext = providerContext;
+            service.setNotificationProvider(this.providerContext
+                    .getSALService(NotificationProviderService.class));
+            registration = providerContext.addRpcImplementation(
+                    HelloService.class, service);
+            log.info(
+                    "Registered 'HelloService' implementation '{}' with registration '{}'",
+                    service, registration);
+        } catch (IllegalStateException e) {
+            log.error("Unable to register 'HelloService' implementation", e);
+        }
     }
 
     @Override
     protected void stopImpl(BundleContext context) {
-        try {
-            System.err.println("Closing registration");
-            registration.close();
-            System.err.println("Close complete");
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (registration != null) {
+            try {
+                log.info(
+                        "Closing 'HelloService' implementation '{}' with registration '{}'",
+                        service, registration);
+                registration.close();
+                registration = null;
+            } catch (Exception e) {
+                log.error(
+                        "Failed to close 'HelloService' registration, may lead to mulitple implementation registrations and errors",
+                        e);
+            }
+        } else {
+            log.info("'HelloService' implementation being stopped, but implementation is not registered.");
         }
     }
 

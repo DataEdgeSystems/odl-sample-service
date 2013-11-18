@@ -37,12 +37,17 @@ import org.opendaylight.controller.sal.binding.api.NotificationService;
 import org.opendaylight.yangtools.concepts.Registration;
 import org.opendaylight.yangtools.yang.binding.NotificationListener;
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author David Bainbridge <davidk.bainbridge@gmail.com>
  * 
  */
 public class HelloConsumer extends AbstractBindingAwareConsumer {
+
+    private static final Logger log = LoggerFactory
+            .getLogger(HelloConsumer.class);
 
     private Registration<NotificationListener> registration = null;
 
@@ -67,8 +72,9 @@ public class HelloConsumer extends AbstractBindingAwareConsumer {
         try {
             registration.close();
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(
+                    "Failed to close the registration for the 'HelloListener'",
+                    e);
         }
         super.stopImpl(context);
     }

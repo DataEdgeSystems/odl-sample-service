@@ -33,12 +33,16 @@ package com.company.opendaylight.controller.hello.consumer;
 
 import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.HelloDone;
 import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.HelloListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author David Bainbridge <davidk.bainbridge@gmail.com>
  * 
  */
 public class HelloListenerImpl implements HelloListener {
+    private static final Logger log = LoggerFactory
+            .getLogger(HelloListenerImpl.class);
 
     /*
      * (non-Javadoc)
@@ -52,9 +56,7 @@ public class HelloListenerImpl implements HelloListener {
      */
     @Override
     public void onHelloDone(HelloDone notification) {
-        System.err.println("HELLO NOTIFICATION: "
-                + notification.getStatus().name());
-
+        log.debug("Received 'HelloDone' notification with status '{}'",
+                notification.getStatus().name());
     }
-
 }

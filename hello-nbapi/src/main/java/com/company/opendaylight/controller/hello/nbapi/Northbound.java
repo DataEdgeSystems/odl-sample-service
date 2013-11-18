@@ -49,6 +49,8 @@ import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.
 import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.SayHelloInputBuilder;
 import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.SayHelloOutput;
 import org.opendaylight.yangtools.yang.common.RpcResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author David Bainbridge <davidk.bainbridge@gmail.com>
@@ -56,30 +58,26 @@ import org.opendaylight.yangtools.yang.common.RpcResult;
  */
 @Path("/")
 public class Northbound {
+    private static final Logger log = LoggerFactory.getLogger(Northbound.class);
+
     @Path("/{containerName}/hello/{nodeId}")
     @GET
     public Response getHello(@PathParam("containerName") String containerName,
             @PathParam("nodeId") String nodeId) {
         HelloService service = (HelloService) ServiceHelper.getGlobalInstance(
                 HelloService.class, this);
-        
-        System.err.println("SERVICE: " + service);
-        System.err.println("CONTAINER: " + containerName);
-        System.err.println("NODEID: " + nodeId);
+
+        if (log.isDebugEnabled()) {
+            log.debug("INVOKE: 'getHello' with container = '{}' and nodeid = '{}'", containerName, nodeId);
+            try {
+                Field f = service.getClass().getField("_delegate");
+                log.debug("  USING: 'getHello' implementation '{}' and delegate '{}'", service, f.get(service));
+            } catch (Exception e) {
+                log.debug("  ERROR: NO DELEGATE, expect failure");
+            }
+        }       
         SayHelloInput input = new SayHelloInputBuilder().setNodeId(null)
                 .build();
-        for (Field m : service.getClass().getFields()) {
-            System.err.println("  " + m.getName());
-            if ("_delegate".equals(m.getName())) {
-                try {
-                    System.err.println("DELEGATE: " + m.get(service));
-                } catch (IllegalArgumentException | IllegalAccessException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
-        }
-
         Future<RpcResult<SayHelloOutput>> output = service.sayHello(input);
         RpcResult<SayHelloOutput> result;
         try {
@@ -87,7 +85,7 @@ public class Northbound {
         } catch (InterruptedException | ExecutionException e) {
             return Response.serverError().build();
         }
-        System.err.println("RESULT: " + result.getResult().getNodeResponse());
+        log.info("RESULT: '{}'", result.getResult().getNodeResponse().toString());
         return Response.ok().build();
     }
 

@@ -45,12 +45,17 @@ import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.
 import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.SayHelloOutputBuilder;
 import org.opendaylight.yangtools.yang.common.RpcError;
 import org.opendaylight.yangtools.yang.common.RpcResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author David Bainbridge <davidk.bainbridge@gmail.com>
  * 
  */
 public class HelloServiceImpl implements HelloService {
+    private static final Logger log = LoggerFactory
+            .getLogger(HelloServiceImpl.class);
+    
     private NotificationProviderService notificationProvider = null;
 
     /*
@@ -65,7 +70,8 @@ public class HelloServiceImpl implements HelloService {
      */
     @Override
     public Future<RpcResult<SayHelloOutput>> sayHello(SayHelloInput input) {
-        System.err.println("IN IMPLEMENTATION");
+        
+        log.debug("INVOKE: 'sayHello'");
         SayHelloOutput result = new SayHelloOutputBuilder().setNodeResponse(
                 "Hello, World?").build();
 
