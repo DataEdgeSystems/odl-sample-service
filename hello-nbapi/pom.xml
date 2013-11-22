@@ -10,6 +10,7 @@
         <artifactId>hello-service</artifactId>
         <version>0.0.1-SNAPSHOT</version>
         <groupId>com.company.opendaylight.controller</groupId>
+        <relativePath>../hello-service</relativePath>
     </parent>
     <artifactId>hello-nbapi</artifactId>
     <packaging>bundle</packaging>
@@ -23,8 +24,11 @@
                     <instructions>
                         <Import-Package>
                             org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113,
+                            org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.update.hello.input,
                             org.opendaylight.controller.sal.utils,
                             org.opendaylight.yangtools.yang.common,
+                            org.opendaylight.yangtools.yang.binding,
+                            com.company.opendaylight.controller.hello.dto,
                             org.apache.commons.logging,
                             com.sun.jersey.spi.container.servlet,
                             javax.ws.rs,
@@ -76,5 +80,11 @@
             <artifactId>commons.northbound</artifactId>
             <version>0.4.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.codehaus.enunciate</groupId>
+            <artifactId>enunciate-core-annotations</artifactId>
+            <version>${enunciate.version}</version>
+        </dependency>
+
     </dependencies>
 </project>

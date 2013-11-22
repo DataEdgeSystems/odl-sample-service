@@ -5,9 +5,22 @@
         <artifactId>sal-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
         <groupId>org.opendaylight.controller</groupId>
+        <relativePath></relativePath>
     </parent>
     <groupId>com.company.opendaylight.controller</groupId>
     <artifactId>hello-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <artifactId>sal-parent</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <groupId>org.opendaylight.controller</groupId>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>

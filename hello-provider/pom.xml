@@ -5,6 +5,7 @@
         <artifactId>hello-service</artifactId>
         <version>0.0.1-SNAPSHOT</version>
         <groupId>com.company.opendaylight.controller</groupId>
+        <relativePath>../hello-service</relativePath>
     </parent>
     <artifactId>hello-provider</artifactId>
     <packaging>bundle</packaging>
@@ -22,6 +23,8 @@
                             org.opendaylight.controller.sal.binding.api,
                             org/opendaylight.yangtools.yang.binding,
                             org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113,
+                            org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.update.hello.input,
+                            com.company.opendaylight.controller.hello.dto,
                             org.slf4j
                         </Import-Package>
                         <Bundle-Activator>com.company.opendaylight.controller.hello.HelloProvider</Bundle-Activator>

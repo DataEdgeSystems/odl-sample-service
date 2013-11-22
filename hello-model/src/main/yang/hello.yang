@@ -53,7 +53,7 @@
             "Initial revision.";
     }
     
-    rpc "say-hello" {
+    rpc say-hello {
         description
             "Perform a hello operation on the specified node.";
         input {
@@ -74,7 +74,111 @@
         }
     }
     
-    notification "hello-done" {
+    grouping hello {
+        leaf name {
+            description
+                "Some arbitrary name.";
+            type
+                string;
+        }
+        leaf value {
+            description
+                "Some arbitrary value.";
+            type
+                int64;
+        }
+    }
+    
+    rpc get-hello {
+        description
+            "Retrieve a specific hello instance.";
+        input {
+            leaf hello-id {
+                description
+                    "The ID of the hello to retrieve.";
+                type
+                    string;
+            }
+        }
+        output {
+            uses hello {
+                description
+                    "The hello instance.";
+            }           
+        }
+    }
+    
+    rpc create-hello {
+        description
+            "Create a new hello instance.";
+        input {
+            uses hello {
+                description
+                    "The new hello instance";
+            }
+        }
+        output {
+            leaf hello-id {
+                description
+                    "The ID of the new resource.";
+                type
+                    string;
+            }
+        }
+    }
+    
+    rpc update-hello {
+        description
+            "Update an existing hello instance.";
+        input {
+            leaf hello-id {
+                description
+                    "The ID of the hello instance to update.";
+                type
+                    string;
+            }
+            container hello {
+              uses hello; 
+            }
+        }
+        output {
+            leaf status {
+                type enumeration {
+                    enum ok;
+                    enum created;
+                    enum conflict;
+                    enum bad_request;
+                }
+            }
+            leaf id {
+                type
+                    string;                
+             }
+        }
+    }
+    
+    rpc delete-hello {
+            description
+            "Retrieve a specific hello instance.";
+        input {
+            leaf hello-id {
+                description
+                    "The ID of the hello to retrieve.";
+                type
+                    string;
+            }
+        }
+        output {
+            leaf found {
+                description
+                    "True is the resource existed, else false.";
+                type
+                    boolean;
+            }
+        }
+    }
+    
+    notification hello-done {
         description
             "Notification sent when hello operation is complete, regardless
             of the cause of the operation termination, i.e. success or

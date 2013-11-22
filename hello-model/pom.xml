@@ -5,6 +5,7 @@
         <artifactId>hello-service</artifactId>
         <version>0.0.1-SNAPSHOT</version>
         <groupId>com.company.opendaylight.controller</groupId>
+        <relativePath>../hello-service</relativePath>
     </parent>
     <artifactId>hello-model</artifactId>
     <packaging>bundle</packaging>

@@ -32,21 +32,39 @@
 package com.company.opendaylight.controller.hello;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
 import org.opendaylight.controller.sal.binding.api.NotificationProviderService;
 import org.opendaylight.controller.sal.common.util.Futures;
 import org.opendaylight.controller.sal.common.util.Rpcs;
+import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.CreateHelloInput;
+import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.CreateHelloOutput;
+import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.CreateHelloOutputBuilder;
+import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.DeleteHelloInput;
+import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.DeleteHelloOutput;
+import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.DeleteHelloOutputBuilder;
+import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.GetHelloInput;
+import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.GetHelloOutput;
+import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.GetHelloOutputBuilder;
 import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.HelloDone;
 import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.HelloDoneBuilder;
 import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.HelloService;
 import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.SayHelloInput;
 import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.SayHelloOutput;
 import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.SayHelloOutputBuilder;
+import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.UpdateHelloInput;
+import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.UpdateHelloOutput;
+import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.UpdateHelloOutput.Status;
+import org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.UpdateHelloOutputBuilder;
 import org.opendaylight.yangtools.yang.common.RpcError;
 import org.opendaylight.yangtools.yang.common.RpcResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.company.opendaylight.controller.hello.dto.HelloDTO;
 
 /**
  * @author David Bainbridge <davidk.bainbridge@gmail.com>
@@ -55,8 +73,19 @@ import org.slf4j.LoggerFactory;
 public class HelloServiceImpl implements HelloService {
     private static final Logger log = LoggerFactory
             .getLogger(HelloServiceImpl.class);
-    
+
+    private Map<String, HelloDTO> hellos = new ConcurrentHashMap<String, HelloDTO>();
+
     private NotificationProviderService notificationProvider = null;
+
+    public void setNotificationProvider(
+            NotificationProviderService notificationProvider) {
+        this.notificationProvider = notificationProvider;
+    }
+
+    public final NotificationProviderService getNotificationProvider() {
+        return notificationProvider;
+    }
 
     /*
      * (non-Javadoc)
@@ -70,7 +99,7 @@ public class HelloServiceImpl implements HelloService {
      */
     @Override
     public Future<RpcResult<SayHelloOutput>> sayHello(SayHelloInput input) {
-        
+
         log.debug("INVOKE: 'sayHello'");
         SayHelloOutput result = new SayHelloOutputBuilder().setNodeResponse(
                 "Hello, World?").build();
@@ -84,12 +113,118 @@ public class HelloServiceImpl implements HelloService {
                 new ArrayList<RpcError>()));
     }
 
-    public void setNotificationProvider(
-            NotificationProviderService notificationProvider) {
-        this.notificationProvider = notificationProvider;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com
+     * .ns.model
+     * .hello.rev131113.HelloService#createHello(org.opendaylight.yang.gen
+     * .v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.
+     * CreateHelloInput)
+     */
+    @Override
+    public Future<RpcResult<CreateHelloOutput>> createHello(
+            CreateHelloInput input) {
+        log.debug("INPUT: {}", input);
+        HelloDTO h = new HelloDTO(input.getName(), input.getValue());
+        String id = UUID.randomUUID().toString();
+        hellos.put(id, h);
+        log.debug("PUT {} at {}", h, id);
+        return Futures.immediateFuture(Rpcs.getRpcResult(true,
+                new CreateHelloOutputBuilder().setHelloId(id).build(),
+                new ArrayList<RpcError>()));
     }
 
-    public final NotificationProviderService getNotificationProvider() {
-        return notificationProvider;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com
+     * .ns.model
+     * .hello.rev131113.HelloService#deleteHello(org.opendaylight.yang.gen
+     * .v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.
+     * DeleteHelloInput)
+     */
+    @Override
+    public Future<RpcResult<DeleteHelloOutput>> deleteHello(
+            DeleteHelloInput input) {
+        try {
+            log.error("In DELETE {}", input);
+            HelloDTO h = hellos.remove(input.getHelloId());
+            if (h != null) {
+                log.debug("DELETED: {}", input.getHelloId());
+            } else {
+                log.debug("NOT FOUND {}", input.getHelloId());
+            }
+            return Futures.immediateFuture(Rpcs.getRpcResult(true,
+                    new DeleteHelloOutputBuilder().setFound(h != null).build(),
+                    new ArrayList<RpcError>()));
+        } catch (Exception e) {
+            log.error("WHAT", e);
+            throw e;
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com
+     * .ns.model
+     * .hello.rev131113.HelloService#getHello(org.opendaylight.yang.gen.
+     * v1.http.controller
+     * .opendaylight.company.com.ns.model.hello.rev131113.GetHelloInput)
+     */
+    @Override
+    public Future<RpcResult<GetHelloOutput>> getHello(GetHelloInput input) {
+        HelloDTO h = hellos.get(input.getHelloId());
+        log.debug("GET in {} from {} value {}", this, input.getHelloId(), h);
+
+        GetHelloOutput output = null;
+        if (h != null) {
+            GetHelloOutputBuilder builder = new GetHelloOutputBuilder();
+            builder.fieldsFrom(h);
+            output = builder.build();
+        }
+        return Futures.immediateFuture(Rpcs.getRpcResult(true, output,
+                new ArrayList<RpcError>()));
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com
+     * .ns.model
+     * .hello.rev131113.HelloService#updateHello(org.opendaylight.yang.gen
+     * .v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.
+     * UpdateHelloInput)
+     */
+    @Override
+    public Future<RpcResult<UpdateHelloOutput>> updateHello(
+            UpdateHelloInput input) {
+        // An Update can be a create or an update.
+        String id = input.getHelloId();
+        HelloDTO h = hellos.get(id);
+        if (h == null) {
+            // Need to create it with the specified ID.
+            h = new HelloDTO(input.getHello().getName(), input.getHello()
+                    .getValue());
+            hellos.put(id, h);
+            log.debug("PUT CREATED {} at {}", h, id);
+            return Futures.immediateFuture(Rpcs.getRpcResult(true,
+                    new UpdateHelloOutputBuilder().setStatus(Status.Created)
+                            .setId(id).build(), new ArrayList<RpcError>()));
+        } else {
+            // Need to update the Hello resource
+            h.setName(input.getHello().getName());
+            h.setValue(input.getHello().getValue());
+            log.debug("PUT UPDATED {} at {}", h, id);
+            return Futures.immediateFuture(Rpcs
+                    .getRpcResult(true, new UpdateHelloOutputBuilder()
+                            .setStatus(Status.Ok).build(),
+                            new ArrayList<RpcError>()));
+        }
     }
 }
