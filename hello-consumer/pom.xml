@@ -18,11 +18,11 @@
                 <configuration>
                     <instructions>
                         <Import-Package>
-                            org.opendaylight.yangtools.yang.common,
-                            org.opendaylight.controller.sal.common.util,
                             org.opendaylight.controller.sal.binding.api,
-                            org/opendaylight.yangtools.yang.binding,
                             org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113,
+                            org.opendaylight.yangtools.concepts,
+                            org.opendaylight.yangtools.yang.binding,
+                            org.osgi.framework,
                             org.slf4j
                         </Import-Package>
                         <Bundle-Activator>com.company.opendaylight.controller.hello.consumer.HelloConsumer</Bundle-Activator>

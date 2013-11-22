@@ -18,13 +18,14 @@
                 <configuration>
                     <instructions>
                         <Import-Package>
-                            org.opendaylight.yangtools.yang.common,
-                            org.opendaylight.controller.sal.common.util,
+                            com.company.opendaylight.controller.hello.dto,
                             org.opendaylight.controller.sal.binding.api,
-                            org/opendaylight.yangtools.yang.binding,
+                            org.opendaylight.controller.sal.common.util,
                             org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113,
                             org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.update.hello.input,
-                            com.company.opendaylight.controller.hello.dto,
+                            org.opendaylight.yangtools.yang.binding,
+                            org.opendaylight.yangtools.yang.common,
+                            org.osgi.framework,
                             org.slf4j
                         </Import-Package>
                         <Bundle-Activator>com.company.opendaylight.controller.hello.HelloProvider</Bundle-Activator>

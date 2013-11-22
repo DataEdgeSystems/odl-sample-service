@@ -23,22 +23,17 @@
                 <configuration>
                     <instructions>
                         <Import-Package>
-                            org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113,
-                            org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.update.hello.input,
-                            org.opendaylight.controller.sal.utils,
-                            org.opendaylight.yangtools.yang.common,
-                            org.opendaylight.yangtools.yang.binding,
                             com.company.opendaylight.controller.hello.dto,
-                            org.apache.commons.logging,
                             com.sun.jersey.spi.container.servlet,
                             javax.ws.rs,
                             javax.ws.rs.core,
-                            javax.xml.bind.annotation,
-                            javax.xml.bind,
-                            org.slf4j,
-                            org.apache.catalina.filters,
-                            org.codehaus.jackson.jaxrs,
-                            !org.codehaus.enunciate.jaxrs
+                            !org.codehaus.enunciate.jaxrs,
+                            org.opendaylight.controller.sal.utils,
+                            org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113,
+                            org.opendaylight.yang.gen.v1.http.controller.opendaylight.company.com.ns.model.hello.rev131113.update.hello.input,
+                            org.opendaylight.yangtools.yang.common,
+                            org.opendaylight.yangtools.yang.binding,
+                            org.slf4j
                         </Import-Package>
                         <Web-ContextPath>/controller/nb/v1/hello</Web-ContextPath>
                         <Jaxrs-Resources>,${classes;ANNOTATION;javax.ws.rs.Path}</Jaxrs-Resources>
