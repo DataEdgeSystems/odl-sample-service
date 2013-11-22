@@ -70,7 +70,9 @@ public class HelloConsumer extends AbstractBindingAwareConsumer {
     @Override
     protected void stopImpl(BundleContext context) {
         try {
-            registration.close();
+            if (registration != null) {
+                registration.close();
+            }
         } catch (Exception e) {
             log.error(
                     "Failed to close the registration for the 'HelloListener'",
